@@ -2,6 +2,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.awt.Rectangle;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -14,14 +15,18 @@ public class PlayerShip {
     private int offsetX;
     private int offsetY;
 
+    private Rectangle box;
+
     private BufferedImage ship;
 
-    public PlayerShip(int x, int y, boolean hero) {
+    public PlayerShip(int x, int y, int xSpeed, int ySpeed, boolean hero) {
         posX = x;
         posY = y;
 
-        offsetX = 2;
-        offsetY = 3;
+        offsetX = xSpeed;
+        offsetY = ySpeed;
+
+        box = new Rectangle(x, y, 64, 64);
 
         try {
             if (hero) {
@@ -29,6 +34,8 @@ public class PlayerShip {
             } else {
                 ship = ImageIO.read(getClass().getResourceAsStream("/images/EvilShip.png"));
             }
+            
+
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "There was an error loading the image");
         }
@@ -44,6 +51,20 @@ public class PlayerShip {
 
         posX += offsetX;
         posY += offsetY;
+
+        box.setLocation((int) box.getX() + offsetX, (int) box.getY() + offsetY);
+    }
+
+    public boolean collides(PlayerShip other) {
+        if (box.intersects(other.box.getBounds()))
+            return true;
+        else
+            return false;
+    }
+
+    // Returns the boundingBox
+    public Rectangle getBounds() {
+        return box;
     }
 
     public void reverseShip() {

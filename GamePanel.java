@@ -8,13 +8,13 @@ import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements ActionListener {
     
-    PlayerShip pShip1;
-    PlayerShip pShip2;
+    PlayerShip shipHero;
+    PlayerShip shipEvil;
 
     public GamePanel() {
-        pShip1 = new PlayerShip(120, 20, true);
-        pShip2 = new PlayerShip(300, 50, false);
-        pShip2.reverseShip();
+        shipHero = new PlayerShip(120, 20, 2, 3, true);
+        shipEvil = new PlayerShip(300, 50, 1, 5, false);
+        shipEvil.reverseShip();
         Timer time = new Timer(15, this);
         time.start();
     }
@@ -22,13 +22,18 @@ public class GamePanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         handleInput();
-        update();
+        if (shipEvil.collides(shipHero)) {
+            
+        } else {
+            update();    
+        }
+        
         repaint();
     }
 
     public void update() {
-        pShip1.update();
-        pShip2.update();
+        shipHero.update();
+        shipEvil.update();
     }
 
     public void handleInput() {
@@ -41,8 +46,8 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setColor(Color.black);
         g.fillRect(0,0, GameFrame.GAME_WIDTH, GameFrame.GAME_HEIGHT);
 
-        pShip1.render(g);
-        pShip2.render(g);
+        shipHero.render(g);
+        shipEvil.render(g);
     }
     
 }
